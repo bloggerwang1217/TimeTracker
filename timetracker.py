@@ -1,10 +1,12 @@
 import datetime
 import tkinter as tk
-from tkinter import filedialog as fd
 import tkinter.font as tkFont
-from PIL import ImageTk
-import matplotlib.pyplot as pyplot
+from tkinter import filedialog as fd
+from PIL import ImageTk, Image
 import os
+import analysis
+
+data = []
 
 class TimeTracker(tk.Frame):
 
@@ -23,9 +25,9 @@ class TimeTracker(tk.Frame):
         self.StartTimeLabel = tk.Label(self, text = "start date:", height = 1, width = 10, font = f)
         self.EndTimeLabel = tk.Label(self, text = "  end date:", height = 1, width = 10, font = f)
         self.StartTimeBox = tk.Text(self, height = 1, width = 15, font = f)
-        self.StartTimeBox.insert("1.0", "2022-02-10")
+        self.StartTimeBox.insert("1.0", "2022-01-28-00-00")
         self.EndTimeBox = tk.Text(self, height = 1, width = 15, font = f)
-        self.EndTimeBox.insert("1.0", "2022-02-10")
+        self.EndTimeBox.insert("1.0", "2022-01-28-23-59")
         
         self.LoadFileButton.grid(row = 0, rowspan = 2, column = 0, columnspan = 2, sticky = tk.NE + tk.SW)
         self.PlotButton.grid(row = 0, rowspan = 2, column = 2, sticky = tk.W)
@@ -38,22 +40,26 @@ class TimeTracker(tk.Frame):
     
     
     def clickLoadFileButton(self):
-        filename = tk.filedialog.askopenfilename()
+        global data
+        filename = fd.askopenfilename()
         if(filename.split('/')[-1][-3::] == "csv"):
             self.LoadFileButton.config(text=filename.split('/')[-1])
+            data = analysis.read_csv(filename)
         else:
             self.LoadFileButton.config(text="Not csv file")
 
     def clickPlotButton(self):
-        start = self.StartTimeBox.get("1.0", tk.END)
-        end = self.EndTimeBox.get("1.0", tk.END)
+        start_time = datetime.datetime.strptime(self.StartTimeBox.get("1.0", tk.END).strip(), "%Y-%m-%d-%H-%M")
+        end_time = datetime.datetime.strptime(self.EndTimeBox.get("1.0", tk.END).strip(), "%Y-%m-%d-%H-%M")
 
-        print(start,end)
+        pic_name = analysis.one_day_status(data, start_time, end_time)
         
     #     self.makeScatter(x, y)
 
-    #     self.imageMain = ImageTk.PhotoImage(file = "temp.png")
-    #     self.cvsMain.create_image(400, 300, image = self.imageMain, anchor = tk.CENTER)
+        self.MainImage = Image.open(pic_name)
+        # self.MainImage = self.MainImage.resize((800, 600), Image.ANTIALIAS)
+        self.MainImage = ImageTk.PhotoImage(self.MainImage)
+        self.MainCanvus.create_image(400, 300, image = self.MainImage, anchor = tk.CENTER)
     #     os.system("del temp.png")
 
     # def makeScatter(self, x, y): 
