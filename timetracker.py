@@ -49,34 +49,20 @@ class TimeTracker(tk.Frame):
             self.LoadFileButton.config(text="Not csv file")
 
     def clickPlotButton(self):
-        start_time = datetime.datetime.strptime(self.StartTimeBox.get("1.0", tk.END).strip(), "%Y-%m-%d-%H-%M")
-        end_time = datetime.datetime.strptime(self.EndTimeBox.get("1.0", tk.END).strip(), "%Y-%m-%d-%H-%M")
+        if len(data):
+            start_time = datetime.datetime.strptime(self.StartTimeBox.get("1.0", tk.END).strip(), "%Y-%m-%d-%H-%M")
+            end_time = datetime.datetime.strptime(self.EndTimeBox.get("1.0", tk.END).strip(), "%Y-%m-%d-%H-%M")
 
-        pic_name = analysis.one_day_status(data, start_time, end_time)
-        
-    #     self.makeScatter(x, y)
+            if start_time.date() == end_time.date():
+                pic_name = analysis.one_day_status(data, start_time, end_time)
+            else:
+                pic_name = analysis.average_status(data, start_time, end_time)
 
-        self.MainImage = Image.open(pic_name)
-        # self.MainImage = self.MainImage.resize((800, 600), Image.ANTIALIAS)
-        self.MainImage = ImageTk.PhotoImage(self.MainImage)
-        self.MainCanvus.create_image(400, 300, image = self.MainImage, anchor = tk.CENTER)
-    #     os.system("del temp.png")
-
-    # def makeScatter(self, x, y): 
-    #     fig = pyplot.figure()
-    #     ax = fig.add_subplot(111)
-        
-    #     rangeX = max(x) - min(x)
-    #     ax.set_xlim(min(x) - rangeX * 0.1, max(x) + rangeX * 0.1)
-    #     rangeY = max(y) - min(y)
-    #     ax.set_ylim(min(y) - rangeY * 0.1, max(y) + rangeY * 0.1)
-
-    #     pyplot.plot(x, y, 'bo')
-
-    #     for i, j in zip(x, y):
-    #       ax.annotate(str(i) + ", " + str(j), xy = (i + 0.1, j + 0.1))
-
-    #     pyplot.savefig("temp.png") 
+            self.MainImage = Image.open(pic_name)
+            # self.MainImage = self.MainImage.resize((800, 600), Image.ANTIALIAS)
+            self.MainImage = ImageTk.PhotoImage(self.MainImage)
+            self.MainCanvus.create_image(400, 300, image = self.MainImage, anchor = tk.CENTER)
+            os.remove(pic_name)
 
 
 tracker = TimeTracker()
