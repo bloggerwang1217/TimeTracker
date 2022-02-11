@@ -7,7 +7,6 @@ import os
 
 plt.rcParams['figure.dpi'] = 125
 plt.rcParams['savefig.dpi'] = 125
-# f = "lihsianti"
 
 path = os.getcwd()
 f = fm.FontProperties(fname=f"{path}/TaipeiSansTCBeta-Regular.ttf")
