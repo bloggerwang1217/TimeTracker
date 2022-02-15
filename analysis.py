@@ -7,9 +7,10 @@ import os
 
 plt.rcParams['figure.dpi'] = 125
 plt.rcParams['savefig.dpi'] = 125
+f = "lihsianti"
 
-path = os.getcwd()
-f = fm.FontProperties(fname=f"{path}/TaipeiSansTCBeta-Regular.ttf")
+# path = os.getcwd()
+# f = fm.FontProperties(fname=f"{path}/TaipeiSansTCBeta-Regular.ttf")
 
 def read_csv(filename):
     data = []
@@ -69,6 +70,7 @@ def average_status(data, start_time, end_time):
 
     delta_time = end_time.date()-start_time.date()
     days = int(delta_time.days)
+    days += 1
 
     for key in time_accumulation.keys():
         time_accumulation[key] = round(time_accumulation[key]/days, 0)
@@ -94,3 +96,7 @@ def average_status(data, start_time, end_time):
     plt.clf()
 
     return "average_status.png"
+
+
+def trend_in_days(data, start_time, end_time):
+    pass
